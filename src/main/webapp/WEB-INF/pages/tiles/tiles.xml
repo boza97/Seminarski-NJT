@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <definition name="base-definition"
+                template="/WEB-INF/pages/tiles/layout/defaultLayout.jsp">
+        <put-attribute name="title" value=""></put-attribute>
+        <put-attribute name="header"
+                       value="/WEB-INF/pages/tiles/template/defaultHeader.jsp">
+        </put-attribute>
+        <put-attribute name="footer"
+                       value="/WEB-INF/pages/tiles/template/defaultFooter.jsp">
+        </put-attribute>
+        <put-attribute name="body" value=""></put-attribute>
+        <put-list-attribute name="scripts"></put-list-attribute>
+        <put-list-attribute name="stackCss"></put-list-attribute>
+    </definition>
+    
+    <!--LOGIN-->
+    <definition name="login" extends="base-definition">
+        <put-attribute name="title" value="Login"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/auth/login.jsp">
+        </put-attribute>
+    </definition>
+    
+    <!--REGISTER-->
+    <definition name="register" extends="base-definition">
+        <put-attribute name="title" value="Register"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/auth/register.jsp">
+        </put-attribute>
+    </definition>
+    
+    <!--HOME-->
+    <definition name="home" extends="base-definition">
+        <put-attribute name="title" value="Home"></put-attribute>        
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/home/index.jsp">
+        </put-attribute>
+        <put-list-attribute name="scripts" inherit="true">
+            <add-attribute value="resources/js/jquery.nivo.slider.pack.js" />  
+            <add-attribute value="resources/js/home.js" />           
+        </put-list-attribute>
+        <put-list-attribute name="stackCss" inherit="true">
+            <add-attribute value="resources/css/nivo-slider.css" />
+            <add-attribute value="resources/themes/nivo-slider/default.css" />
+        </put-list-attribute>
+    </definition>
+  
+</tiles-definitions>
