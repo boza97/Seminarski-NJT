@@ -26,10 +26,6 @@
                     <a class="nav-link" href="${root}/orders">Narudžbine</a>
                 </li>
             </c:if>
-
-            <li class="nav-item">
-                <a class="nav-link" href="${root}/news">Vesti</a>
-            </li>
         </ul>       
 
         <ul class="navbar-nav">

@@ -5,6 +5,7 @@
  */
 package rs.fon.silab.seminarskinjt.config;
 
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -61,8 +62,13 @@ public class WebContextConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    Gson gson() {
+        return new Gson();
+    }
+
+    @Bean
     public UserInterceptor userInterceptor() {
-        return new UserInterceptor();
+        return new UserInterceptor(gson());
     }
 
     @Override

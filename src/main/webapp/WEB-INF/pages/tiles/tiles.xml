@@ -49,5 +49,16 @@
             <add-attribute value="resources/themes/nivo-slider/default.css" />
         </put-list-attribute>
     </definition>
+    
+    <!--PRODUCTS-->
+    <definition name="products/view" extends="base-definition">
+        <put-attribute name="title" value="View"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/products/view.jsp">
+        </put-attribute>
+        <put-list-attribute name="scripts" inherit="true">
+            <add-attribute value="resources/js/products/view.js" />
+        </put-list-attribute>
+    </definition>
   
 </tiles-definitions>
