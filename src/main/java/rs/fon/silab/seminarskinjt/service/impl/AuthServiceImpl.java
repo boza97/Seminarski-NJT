@@ -8,7 +8,8 @@ package rs.fon.silab.seminarskinjt.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import rs.fon.silab.seminarskinjt.entity.UserEntity;
+import org.springframework.transaction.annotation.Transactional;
+import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 import rs.fon.silab.seminarskinjt.repository.UserRepository;
 import rs.fon.silab.seminarskinjt.service.AuthService;
@@ -18,6 +19,7 @@ import rs.fon.silab.seminarskinjt.service.AuthService;
  * @author Bozidar
  */
 @Service
+@Transactional
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -32,15 +34,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void register(UserEntity user) {
+    public void register(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
     }
 
     @Override
-    public UserEntity login(String email, String password) throws LoginException {
-        UserEntity user = userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User login(String email, String password) throws LoginException {
+        User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new LoginException("Podaci koje ste uneli se ne poklapaju.");
         }
@@ -50,4 +57,5 @@ public class AuthServiceImpl implements AuthService {
         }
         return user;
     }
+
 }

@@ -20,8 +20,8 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "USER")
-public class UserEntity implements Serializable{
-    
+public class User implements Serializable, IEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_USER")
     @TableGenerator(name = "GEN_USER", table = "GEN_ID",
@@ -33,10 +33,10 @@ public class UserEntity implements Serializable{
     private String email;
     private String password;
 
-    public UserEntity() {
+    public User() {
     }
 
-    public UserEntity(Long id, String firstName, String lastName, String email, String password) {
+    public User(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -106,7 +106,7 @@ public class UserEntity implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final UserEntity other = (UserEntity) obj;
+        final User other = (User) obj;
         if (!Objects.equals(this.email, other.email)) {
             return false;
         }

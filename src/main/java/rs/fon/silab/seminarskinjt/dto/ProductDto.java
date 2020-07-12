@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Bozidar
  */
-public class ProductDto {
+public class ProductDto implements IDto{
 
     private Long id;
     private String name;

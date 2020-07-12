@@ -23,7 +23,7 @@
                 <div class="card">
                     <c:choose>
                         <c:when test="${product.image != null}">
-                            <img class="card-img-top index-prod-image mx-auto my-3" src="${root}/resources/img/products/${product.image}" alt="${product.image}">
+                            <img class="card-img-top index-prod-image mx-auto my-3" src="${root}/resources/img/products/${product.image}" alt="${product.name}">
                         </c:when>
                         <c:otherwise>
                             <img class="card-img-top index-prod-image mx-auto my-3" src="${root}/resources/img/products/no-image.png"> 

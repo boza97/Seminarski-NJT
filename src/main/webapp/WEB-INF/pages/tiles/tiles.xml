@@ -51,14 +51,51 @@
     </definition>
     
     <!--PRODUCTS-->
+    <definition name="products" extends="base-definition">
+        <put-attribute name="title" value="Products"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/products/index.jsp">
+        </put-attribute>
+        <put-list-attribute name="scripts" inherit="true">
+            <add-attribute value="resources/js/cart/add.to.cart.js" />
+            <add-attribute value="resources/js/products/index.js" />
+        </put-list-attribute>
+    </definition>
+    
     <definition name="products/view" extends="base-definition">
         <put-attribute name="title" value="View"></put-attribute>
         <put-attribute name="body"
                        value="/WEB-INF/pages/products/view.jsp">
         </put-attribute>
         <put-list-attribute name="scripts" inherit="true">
-            <add-attribute value="resources/js/products/view.js" />
+            <add-attribute value="resources/js/cart/add.to.cart.js" />
         </put-list-attribute>
+    </definition>
+    
+    <!--CART-->
+    <definition name="cart" extends="base-definition">
+        <put-attribute name="title" value="Cart"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/cart/index.jsp">
+        </put-attribute>
+        <put-list-attribute name="scripts" inherit="true">
+            <add-attribute value="resources/js/cart/cart.index.js" />
+        </put-list-attribute>
+    </definition>
+    
+    <!--ORDERS-->
+    <definition name="orders" extends="base-definition">
+        <put-attribute name="title" value="Orders"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/orders/index.jsp">
+        </put-attribute>
+    </definition>
+    
+    <definition name="checkout" extends="base-definition">
+        <put-attribute name="title" value="Checkout"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/orders/checkout.jsp">
+        </put-attribute>
     </definition>
   
 </tiles-definitions>

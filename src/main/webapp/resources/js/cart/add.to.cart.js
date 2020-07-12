@@ -1,7 +1,7 @@
 function addToCart(id)
 {
     var data = {
-        productId: 222
+        productId: +id
     };
     $.ajax({
         url: '/BTechnology/cart',

@@ -9,7 +9,7 @@ package rs.fon.silab.seminarskinjt.dto;
  *
  * @author Bozidar
  */
-public class UserDto {
+public class UserDto implements IDto{
 
     private Long id;
     private String firstName;

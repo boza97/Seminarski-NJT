@@ -15,7 +15,7 @@
                             <label for="firstName" class="col-md-4 col-form-label text-md-right">Ime:</label>
                             <div class="col-md-6">
                                 <spring:bind path="firstName">
-                                    <form:input id="firstName" class="form-control ${status.error ? 'is-invalid' : ''}" path="firstName"/>
+                                    <form:input id="firstName" class="form-control ${status.error ? 'is-invalid' : ''}" type="text" path="firstName"/>
                                     <span class="invalid-feedback" role="alert">
                                         <strong><form:errors path="firstName"/></strong>
                                     </span>
@@ -27,7 +27,7 @@
                             <label for="lastName" class="col-md-4 col-form-label text-md-right">Prezime:</label>
                             <div class="col-md-6">
                                 <spring:bind path="lastName">
-                                    <form:input id="lastName" class="form-control ${status.error ? 'is-invalid' : ''}" path="lastName"/>
+                                    <form:input id="lastName" class="form-control ${status.error ? 'is-invalid' : ''}" type="text" path="lastName"/>
                                     <span class="invalid-feedback" role="alert">
                                         <strong><form:errors path="lastName"/></strong>
                                     </span>
@@ -39,7 +39,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">E-mail adresa:</label>
                             <div class="col-md-6">
                                 <spring:bind path="email">
-                                    <form:input id="email" class="form-control ${status.error ? 'is-invalid' : ''}" path="email"/>
+                                    <form:input id="email" class="form-control ${status.error ? 'is-invalid' : ''}" type="text" path="email"/>
                                     <span class="invalid-feedback" role="alert">
                                         <strong><form:errors path="email"/></strong>
                                     </span>

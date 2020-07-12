@@ -6,14 +6,21 @@
 package rs.fon.silab.seminarskinjt.repository;
 
 import java.util.List;
-import rs.fon.silab.seminarskinjt.entity.ProductEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import rs.fon.silab.seminarskinjt.entity.Product;
 
 /**
  *
  * @author Bozidar
  */
-public interface ProductRepository {
-    void save(ProductEntity product);
-    List<ProductEntity> getFeatured();
-    ProductEntity findById(Long id);
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long>{
+    @Query("SELECT p FROM Product WHERE p.featured = 1")
+    List<Product> findAllFeatured();
+    
+    @Query("SELECT p FROM Product WHERE p.category.id = ?1")
+    List<Product> findAllByCategory(Long categoryId);
+    
 }

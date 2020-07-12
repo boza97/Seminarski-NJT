@@ -19,17 +19,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CATEGORY")
-public class CategoryEntity implements Serializable {
+public class Category implements Serializable, IEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public CategoryEntity() {
+    public Category() {
     }
 
-    public CategoryEntity(Long id, String name) {
+    public Category(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -74,7 +74,7 @@ public class CategoryEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CategoryEntity other = (CategoryEntity) obj;
+        final Category other = (Category) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

@@ -5,13 +5,15 @@
  */
 package rs.fon.silab.seminarskinjt.dto.response;
 
+import rs.fon.silab.seminarskinjt.dto.IDto;
+
 /**
  *
  * @author Bozidar
  */
-public class ResponseDataDto {
+public class ResponseDataDto implements IDto{
 
-    private String status = "OK";
+    private String code = "OK";
     private String message;
     private Object result;
 
@@ -23,12 +25,12 @@ public class ResponseDataDto {
         this.result = result;
     }
     
-    public String getStatus() {
-        return status;
+    public String getCode() {
+        return code;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getMessage() {

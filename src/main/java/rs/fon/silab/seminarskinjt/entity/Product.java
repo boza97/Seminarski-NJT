@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "PRODUCT")
-public class ProductEntity implements Serializable {
+public class Product implements Serializable, IEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_PRODUCT")
@@ -34,8 +34,8 @@ public class ProductEntity implements Serializable {
             pkColumnValue = "TABLE_PRODUCT", initialValue = 0, allocationSize = 1)
     private Long id;
     private String name;
-    
-    @Column(columnDefinition = "DECIMAL")
+
+    @Column(columnDefinition = "DECIMAL", precision = 10, scale = 2)
     private double price;
 
     @Column(columnDefinition = "TEXT")
@@ -43,15 +43,15 @@ public class ProductEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "CATEGORY_ID")
-    private CategoryEntity category;
+    private Category category;
     private String image;
     private int featured;
     private int quantity;
 
-    public ProductEntity() {
+    public Product() {
     }
 
-    public ProductEntity(Long id, String name, double price, String details, CategoryEntity category, String image, int featured, int quantity) {
+    public Product(Long id, String name, double price, String details, Category category, String image, int featured, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -94,11 +94,11 @@ public class ProductEntity implements Serializable {
         this.details = details;
     }
 
-    public CategoryEntity getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryEntity category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -156,7 +156,7 @@ public class ProductEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ProductEntity other = (ProductEntity) obj;
+        final Product other = (Product) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

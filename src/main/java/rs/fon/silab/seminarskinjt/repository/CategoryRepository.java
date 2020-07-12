@@ -5,13 +5,14 @@
  */
 package rs.fon.silab.seminarskinjt.repository;
 
-import java.util.List;
-import rs.fon.silab.seminarskinjt.entity.CategoryEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import rs.fon.silab.seminarskinjt.entity.Category;
 
 /**
  *
  * @author Bozidar
  */
-public interface CategoryRepository {
-    List<CategoryEntity> getAll();
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long>{
 }

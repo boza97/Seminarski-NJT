@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
-import rs.fon.silab.seminarskinjt.entity.UserEntity;
+import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 import rs.fon.silab.seminarskinjt.service.AuthService;
 import rs.fon.silab.seminarskinjt.validator.UserValidator;
@@ -72,7 +72,7 @@ public class AuthController {
             return "redirect:/login";
         }
         try {
-            UserEntity user = authService.login(email, password);
+            User user = authService.login(email, password);
             UserDto userDto = convertToDto(user);
             request.getSession(true).setAttribute("user", userDto);
             return "redirect:/home";
@@ -101,7 +101,7 @@ public class AuthController {
             model.addAttribute("userDto", userDto);
             return "register";
         }
-        UserEntity user = convertToEntity(userDto);
+        User user = convertToEntity(userDto);
         authService.register(user);
         redirectAttributes.addFlashAttribute("success", "Uspešno ste se registrovali, prijavite se kako bi nastavili dalje.");
         return "redirect:/login";
@@ -118,13 +118,13 @@ public class AuthController {
         return new RegisterUserDto();
     }
 
-    private UserDto convertToDto(UserEntity user) {
+    private UserDto convertToDto(User user) {
         UserDto userDto = modelMapper.map(user, UserDto.class);
         return userDto;
     }
 
-    private UserEntity convertToEntity(RegisterUserDto userDto) {
-        UserEntity user = modelMapper.map(userDto, UserEntity.class);
+    private User convertToEntity(RegisterUserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
         return user;
     }
 

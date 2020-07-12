@@ -13,7 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
-import rs.fon.silab.seminarskinjt.entity.UserEntity;
+import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.repository.UserRepository;
 
 /**
@@ -49,7 +49,7 @@ public class UserValidator implements Validator {
             return;
         }
 
-        UserEntity entity = userRepository.findByEmail(user.getEmail());
+        User entity = userRepository.findByEmail(user.getEmail());
         if (entity != null) {
             errors.rejectValue("email", null, "Korisnik već postoji sa zadatom email adresom.");
             return;

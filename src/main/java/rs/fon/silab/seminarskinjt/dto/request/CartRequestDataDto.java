@@ -5,11 +5,13 @@
  */
 package rs.fon.silab.seminarskinjt.dto.request;
 
+import rs.fon.silab.seminarskinjt.dto.IDto;
+
 /**
  *
  * @author Bozidar
  */
-public class CartRequestDataDto {
+public class CartRequestDataDto implements IDto{
     
     private Long productId;
 

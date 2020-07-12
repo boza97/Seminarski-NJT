@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import rs.fon.silab.seminarskinjt.dto.IDto;
 import rs.fon.silab.seminarskinjt.dto.ProductDto;
-import rs.fon.silab.seminarskinjt.entity.ProductEntity;
+import rs.fon.silab.seminarskinjt.entity.Product;
 import rs.fon.silab.seminarskinjt.service.ProductService;
+import rs.fon.silab.seminarskinjt.util.DtoUtil;
 
 /**
  *
@@ -22,33 +24,31 @@ import rs.fon.silab.seminarskinjt.service.ProductService;
  */
 @Controller
 public class HomeController {
-    
+
     private final ProductService productService;
     private final ModelMapper modelMapper;
-    
+    private final DtoUtil dtoUtil;
+
     @Autowired
     public HomeController(
             ProductService productService,
-            ModelMapper modelMapper) {
+            ModelMapper modelMapper,
+            DtoUtil dtoUtil) {
         this.productService = productService;
         this.modelMapper = modelMapper;
+        this.dtoUtil = dtoUtil;
     }
-    
+
     @GetMapping(path = {"", "home"})
     public String index() {
         return "home";
     }
-    
+
     @ModelAttribute(name = "featuredProducts")
-    private List<ProductDto> getFeaturedProducs() {
-        List<ProductEntity> featuredProducts = productService.getFeatured();
+    private List<IDto> getFeaturedProducs() {
+        List<Product> featuredProducts = productService.getFeatured();
         return featuredProducts.stream()
-                .map(this::convertToDto)
+                .map(p -> dtoUtil.convertToDto(p, new ProductDto()))
                 .collect(Collectors.toList());
-    }
-    
-    private ProductDto convertToDto(ProductEntity product) {
-        ProductDto productDto = modelMapper.map(product, ProductDto.class);
-        return productDto;
     }
 }
