@@ -173,11 +173,6 @@ public class Order implements Serializable, IEntity {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "OrderEntity{" + "id=" + id + ", contactName=" + contactName + ", city=" + city + ", address=" + address + ", phone=" + phone + ", total=" + total + ", createdAt=" + createdAt + '}';
-    }
-
     public void caluclateTotal() {
         this.total = 0;
         for (OrderItem item : items) {

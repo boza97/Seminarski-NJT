@@ -17,10 +17,10 @@ import rs.fon.silab.seminarskinjt.entity.Product;
  */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
-    @Query("SELECT p FROM Product WHERE p.featured = 1")
+    @Query("SELECT p FROM Product p WHERE p.featured = 1")
     List<Product> findAllFeatured();
     
-    @Query("SELECT p FROM Product WHERE p.category.id = ?1")
+    @Query("SELECT p FROM Product p WHERE p.category.id = ?1")
     List<Product> findAllByCategory(Long categoryId);
     
 }

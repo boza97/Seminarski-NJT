@@ -127,11 +127,6 @@ public class Product implements Serializable, IEntity {
     }
 
     @Override
-    public String toString() {
-        return "ProductEntity{" + "id=" + id + ", name=" + name + ", price=" + price + ", details=" + details + ", category=" + category + ", image=" + image + ", featured=" + featured + ", quantity=" + quantity + '}';
-    }
-
-    @Override
     public int hashCode() {
         int hash = 3;
         hash = 37 * hash + Objects.hashCode(this.id);

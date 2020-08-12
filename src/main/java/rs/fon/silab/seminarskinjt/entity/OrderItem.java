@@ -127,9 +127,4 @@ public class OrderItem implements Serializable, IEntity {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "OrderItemEntity{" + "serialNumber=" + serialNumber + ", quantity=" + quantity + ", amount=" + amount + '}';
-    }
-
 }

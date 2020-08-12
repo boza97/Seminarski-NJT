@@ -51,11 +51,6 @@ public class Category implements Serializable, IEntity {
     }
 
     @Override
-    public String toString() {
-        return "CategoryEntity{" + "id=" + id + ", name=" + name + '}';
-    }
-
-    @Override
     public int hashCode() {
         int hash = 5;
         hash = 89 * hash + Objects.hashCode(this.id);

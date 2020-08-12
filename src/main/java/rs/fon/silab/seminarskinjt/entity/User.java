@@ -116,9 +116,4 @@ public class User implements Serializable, IEntity {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + '}';
-    }
-
 }
