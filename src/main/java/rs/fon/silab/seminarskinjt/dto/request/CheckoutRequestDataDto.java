@@ -5,13 +5,11 @@
  */
 package rs.fon.silab.seminarskinjt.dto.request;
 
-import rs.fon.silab.seminarskinjt.dto.IDto;
-
 /**
  *
  * @author Bozidar
  */
-public class CheckoutRequestDataDto implements IDto {
+public class CheckoutRequestDataDto {
 
     private String[] productid;
     private String[] quantity;

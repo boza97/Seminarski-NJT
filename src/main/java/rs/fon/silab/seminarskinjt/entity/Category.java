@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CATEGORY")
-public class Category implements Serializable, IEntity {
+public class Category implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,4 +75,5 @@ public class Category implements Serializable, IEntity {
         }
         return true;
     }
+    
 }

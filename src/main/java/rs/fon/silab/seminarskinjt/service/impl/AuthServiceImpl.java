@@ -5,10 +5,14 @@
  */
 package rs.fon.silab.seminarskinjt.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
+import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 import rs.fon.silab.seminarskinjt.repository.UserRepository;
@@ -23,30 +27,36 @@ import rs.fon.silab.seminarskinjt.service.AuthService;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthServiceImpl(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public void register(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+    public void register(RegisterUserDto userDto) {
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encodedPassword);
+        User user = modelMapper.map(userDto, User.class);
         userRepository.save(user);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDto findByEmail(String email) {
+        User user = this.userRepository.findByEmail(email);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public User login(String email, String password) throws LoginException {
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public UserDto login(String email, String password) throws LoginException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new LoginException("Podaci koje ste uneli se ne poklapaju.");
@@ -55,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new LoginException("Podaci koje ste uneli se ne poklapaju.");
         }
-        return user;
+        return modelMapper.map(user, UserDto.class);
     }
 
 }

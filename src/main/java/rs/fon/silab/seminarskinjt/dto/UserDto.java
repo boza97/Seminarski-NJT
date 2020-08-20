@@ -9,7 +9,7 @@ package rs.fon.silab.seminarskinjt.dto;
  *
  * @author Bozidar
  */
-public class UserDto implements IDto{
+public class UserDto {
 
     private Long id;
     private String firstName;
@@ -57,5 +57,5 @@ public class UserDto implements IDto{
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
 }

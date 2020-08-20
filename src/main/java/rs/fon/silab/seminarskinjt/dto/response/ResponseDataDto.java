@@ -5,13 +5,11 @@
  */
 package rs.fon.silab.seminarskinjt.dto.response;
 
-import rs.fon.silab.seminarskinjt.dto.IDto;
-
 /**
  *
  * @author Bozidar
  */
-public class ResponseDataDto implements IDto{
+public class ResponseDataDto {
 
     private String code = "OK";
     private String message;
@@ -24,7 +22,7 @@ public class ResponseDataDto implements IDto{
         this.message = message;
         this.result = result;
     }
-    
+
     public String getCode() {
         return code;
     }
@@ -48,5 +46,5 @@ public class ResponseDataDto implements IDto{
     public void setResult(Object result) {
         this.result = result;
     }
-    
+
 }

@@ -6,16 +6,16 @@
 package rs.fon.silab.seminarskinjt.service;
 
 import java.util.List;
-import rs.fon.silab.seminarskinjt.entity.Product;
+import rs.fon.silab.seminarskinjt.dto.ProductDto;
 
 /**
  *
  * @author Bozidar
  */
 public interface ProductService {
-    void save(Product product);
-    List<Product> getFeatured();
-    List<Product> getAllByCategory(Long id);
-    List<Product> getAll();
-    Product findById(Long id);
+    void save(ProductDto productDto);
+    List<ProductDto> getFeatured();
+    List<ProductDto> getAllByCategory(Long id);
+    List<ProductDto> getAll();
+    ProductDto findById(Long id);
 }

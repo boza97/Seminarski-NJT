@@ -1,11 +1,13 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath}" />
+
 <ul>
-    <li><a href="${root}/home">Početna</a></li>
-    <li><a href="${root}/products">Proizvodi</a></li>
+    <li><a href="${root}/home"><spring:message code="label.home.navbar" text="default"/></a></li>
+    <li><a href="${root}/products"><spring:message code="label.products.navbar" text="default"/></a></li>
         <c:if test="${user != null}">
-        <li><a href="cart.php">Korpa</a></li>
+        <li><a href="cart.php"><spring:message code="label.cart.navbar" text="default"/></a></li>
         </c:if>
 </ul>
 

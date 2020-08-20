@@ -7,7 +7,6 @@ package rs.fon.silab.seminarskinjt.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import rs.fon.silab.seminarskinjt.dto.CategoryDto;
-import rs.fon.silab.seminarskinjt.dto.IDto;
 import rs.fon.silab.seminarskinjt.dto.ProductDto;
-import rs.fon.silab.seminarskinjt.entity.Category;
-import rs.fon.silab.seminarskinjt.entity.Product;
 import rs.fon.silab.seminarskinjt.service.CategoryService;
 import rs.fon.silab.seminarskinjt.service.ProductService;
-import rs.fon.silab.seminarskinjt.util.DtoUtil;
 
 /**
  *
@@ -31,20 +26,17 @@ import rs.fon.silab.seminarskinjt.util.DtoUtil;
  */
 @Controller
 @RequestMapping("/products")
-public class ProductsController {
+public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final DtoUtil dtoUtil;
 
     @Autowired
-    public ProductsController(
+    public ProductController(
             ProductService productServic,
-            CategoryService categoryService,
-            DtoUtil dtoUtil) {
+            CategoryService categoryService) {
         this.productService = productServic;
         this.categoryService = categoryService;
-        this.dtoUtil = dtoUtil;
     }
 
     @GetMapping
@@ -56,21 +48,22 @@ public class ProductsController {
     public String view(
             @PathVariable("productId") Long productId,
             Model model) {
-        Product product = productService.findById(productId);
-        model.addAttribute("productDto", dtoUtil.convertToDto(product, new ProductDto()));
+        
+        ProductDto productDto = productService.findById(productId);
+        model.addAttribute("productDto", productDto);
         return "products/view";
     }
 
     @GetMapping("category/{id}")
     public ModelAndView productsByCategory(@PathVariable("id") String id) {
-        List<Product> entities = new ArrayList<>();
+        
+        List<ProductDto> products = new ArrayList<>();
         if (id.equals("*")) {
-            entities = productService.getAll();
+            products = productService.getAll();
         } else {
             Long categoryId = Long.parseLong(id);
-            entities = productService.getAllByCategory(categoryId);
+            products = productService.getAllByCategory(categoryId);
         }
-        List<IDto> products = entities.stream().map(p -> dtoUtil.convertToDto(p, new ProductDto())).collect(Collectors.toList());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/productsByCategory");
         modelAndView.addObject("products", products);
@@ -79,19 +72,12 @@ public class ProductsController {
     }
 
     @ModelAttribute("products")
-    private List<IDto> getProducts() {
-        List<Product> products = productService.getAll();
-        return products.stream()
-                .map(p -> dtoUtil.convertToDto(p, new ProductDto()))
-                .collect(Collectors.toList());
+    private List<ProductDto> getProducts() {
+        return this.productService.getAll();
     }
 
     @ModelAttribute("categories")
-    private List<IDto> getCategories() {
-        List<Category> categories = categoryService.getAll();
-        return categories.stream()
-                .map(c -> dtoUtil.convertToDto(c, new CategoryDto()))
-                .collect(Collectors.toList());
+    private List<CategoryDto> getCategories() {
+        return this.categoryService.getAll();
     }
-
 }

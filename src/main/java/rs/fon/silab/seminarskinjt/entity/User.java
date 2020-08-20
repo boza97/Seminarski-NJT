@@ -20,7 +20,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "USER")
-public class User implements Serializable, IEntity {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_USER")
@@ -115,5 +115,5 @@ public class User implements Serializable, IEntity {
         }
         return true;
     }
-
+    
 }

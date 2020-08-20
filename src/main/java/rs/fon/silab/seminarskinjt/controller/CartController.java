@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import rs.fon.silab.seminarskinjt.dto.OrderItemDto;
 import rs.fon.silab.seminarskinjt.dto.ProductDto;
 import rs.fon.silab.seminarskinjt.dto.request.CartRequestDataDto;
 import rs.fon.silab.seminarskinjt.dto.response.ResponseDataDto;
-import rs.fon.silab.seminarskinjt.entity.Product;
 import rs.fon.silab.seminarskinjt.service.ProductService;
-import rs.fon.silab.seminarskinjt.util.DtoUtil;
 
 /**
  *
@@ -40,14 +39,11 @@ import rs.fon.silab.seminarskinjt.util.DtoUtil;
 public class CartController {
 
     private final ProductService productService;
-    private final DtoUtil dtoUtil;
 
     @Autowired
     public CartController(
-            ProductService productService,
-            DtoUtil dtoUtil) {
+            ProductService productService) {
         this.productService = productService;
-        this.dtoUtil = dtoUtil;
     }
 
     @GetMapping
@@ -64,9 +60,8 @@ public class CartController {
             HttpServletRequest request) {
 
         ResponseDataDto responseData = new ResponseDataDto();
-        Product product = productService.findById(requestData.getProductId());
-        if (product != null) {
-            ProductDto productDto = (ProductDto) dtoUtil.convertToDto(product, new ProductDto());
+        ProductDto productDto = productService.findById(requestData.getProductId());
+        if (productDto != null) {
             if (!exists(request.getSession(), productDto)) {
                 addToCart(request.getSession(), productDto);
                 responseData.setMessage("Uspešno ste dodali proizvod u korpu.");
@@ -88,6 +83,7 @@ public class CartController {
     public ResponseEntity<ResponseDataDto> remove(
             @PathVariable("productId") Long productId,
             HttpSession session) {
+
         System.out.println(productId);
         ResponseDataDto responseData = new ResponseDataDto("Proizvod je obrisan iz korpe", null);
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
@@ -108,6 +104,32 @@ public class CartController {
         }
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    @PostMapping("add-quantities")
+    public String addQuantities(
+            @RequestParam(value = "productid[]") Long[] ids,
+            @RequestParam(value = "quantity[]") int[] quantities,
+            HttpSession session) {
+        List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
+
+        if (cart == null || cart.isEmpty()) {
+            return "cart";
+        }
+
+        addQuantities(cart, ids, quantities);
+
+        return "redirect:/orders/checkout";
+    }
+
+    private void addQuantities(List<OrderItemDto> cart, Long[] ids, int[] quantities) {
+        for (int i = 0; i < cart.size(); i++) {
+            OrderItemDto orderItem = cart.get(i);
+            if (Objects.equals(orderItem.getProduct().getId(), ids[i])) {
+                orderItem.setQuantity(quantities[i]);
+                orderItem.setAmount(orderItem.getProduct().getPrice() * quantities[i]);
+            }
+        }
     }
 
     private boolean exists(HttpSession session, ProductDto product) {

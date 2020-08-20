@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Bozidar
  */
-public class OrderItemDto implements IDto {
+public class OrderItemDto {
 
     private Long serialNumber;
     private Long orderId;

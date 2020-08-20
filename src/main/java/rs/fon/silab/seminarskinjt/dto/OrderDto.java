@@ -5,6 +5,7 @@
  */
 package rs.fon.silab.seminarskinjt.dto;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
  *
  * @author Bozidar
  */
-public class OrderDto implements IDto {
+public class OrderDto {
 
     private Long id;
     private String contactName;
@@ -21,6 +22,7 @@ public class OrderDto implements IDto {
     private String address;
     private String phone;
     private double total;
+    private Timestamp createdAt;
     private UserDto user;
     private List<OrderItemDto> items;
 
@@ -28,13 +30,14 @@ public class OrderDto implements IDto {
         items = new ArrayList<>();
     }
 
-    public OrderDto(Long id, String contactName, String city, String address, String phone, double total, UserDto user, List<OrderItemDto> items) {
+    public OrderDto(Long id, String contactName, String city, String address, String phone, double total, Timestamp createdAt, UserDto user, List<OrderItemDto> items) {
         this.id = id;
         this.contactName = contactName;
         this.city = city;
         this.address = address;
         this.phone = phone;
         this.total = total;
+        this.createdAt = createdAt;
         this.user = user;
         this.items = items;
     }
@@ -85,6 +88,14 @@ public class OrderDto implements IDto {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public UserDto getUser() {

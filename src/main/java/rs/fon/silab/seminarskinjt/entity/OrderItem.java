@@ -6,8 +6,8 @@
 package rs.fon.silab.seminarskinjt.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,15 +24,16 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "ORDER_ITEM")
-public class OrderItem implements Serializable, IEntity {
+public class OrderItem implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_ORDER_ITEM")
     @TableGenerator(name = "GEN_ORDER_ITEM", table = "GEN_ID",
             pkColumnName = "PK_GEN", valueColumnName = "VALUE_GEN",
             pkColumnValue = "TABLE_ORDER_ITEM", initialValue = 0, allocationSize = 1)
-    private Long serialNumber;
+    private Long id;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
@@ -42,27 +43,25 @@ public class OrderItem implements Serializable, IEntity {
     private Product product;
 
     private int quantity;
-
-    @Column(columnDefinition = "DECIMAL", precision = 10, scale = 2)
-    private double amount;
+    private BigDecimal amount;
 
     public OrderItem() {
     }
 
-    public OrderItem(Long serialNumber, Order order, Product product, int quantity, double amount) {
-        this.serialNumber = serialNumber;
+    public OrderItem(Long id, Order order, Product product, int quantity, BigDecimal amount) {
+        this.id = id;
         this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.amount = amount;
     }
 
-    public Long getSerialNumber() {
-        return serialNumber;
+    public Long getId() {
+        return id;
     }
 
-    public void setSerialNumber(Long serialNumber) {
-        this.serialNumber = serialNumber;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Order getOrder() {
@@ -89,20 +88,20 @@ public class OrderItem implements Serializable, IEntity {
         this.quantity = quantity;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.serialNumber);
-        hash = 89 * hash + this.quantity;
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.amount) ^ (Double.doubleToLongBits(this.amount) >>> 32));
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + this.quantity;
+        hash = 79 * hash + Objects.hashCode(this.amount);
         return hash;
     }
 
@@ -118,7 +117,7 @@ public class OrderItem implements Serializable, IEntity {
             return false;
         }
         final OrderItem other = (OrderItem) obj;
-        if (!Objects.equals(this.serialNumber, other.serialNumber)) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.order, other.order)) {

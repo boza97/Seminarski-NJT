@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "PRODUCT")
-public class Product implements Serializable, IEntity {
+public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_PRODUCT")
@@ -157,5 +157,5 @@ public class Product implements Serializable, IEntity {
         }
         return true;
     }
-
+    
 }

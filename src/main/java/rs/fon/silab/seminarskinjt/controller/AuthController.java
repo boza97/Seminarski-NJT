@@ -6,7 +6,6 @@
 package rs.fon.silab.seminarskinjt.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
-import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 import rs.fon.silab.seminarskinjt.service.AuthService;
 import rs.fon.silab.seminarskinjt.validator.UserValidator;
@@ -34,22 +32,14 @@ import rs.fon.silab.seminarskinjt.validator.UserValidator;
 public class AuthController {
 
     private final AuthService authService;
-    private final ModelMapper modelMapper;
     private final UserValidator userValidator;
 
     @Autowired
     public AuthController(
             AuthService authService,
-            ModelMapper modelMapper,
             UserValidator userValidator) {
         this.authService = authService;
-        this.modelMapper = modelMapper;
         this.userValidator = userValidator;
-    }
-
-    @InitBinder
-    private void initBinder(WebDataBinder binder) {
-        binder.setValidator(userValidator);
     }
 
     @GetMapping("login")
@@ -67,13 +57,13 @@ public class AuthController {
             @RequestParam(name = "password") String password,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
+
         if (email.isEmpty() || password.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Morate popuniti sva polja");
             return "redirect:/login";
         }
         try {
-            User user = authService.login(email, password);
-            UserDto userDto = convertToDto(user);
+            UserDto userDto = authService.login(email, password);
             request.getSession(true).setAttribute("user", userDto);
             return "redirect:/home";
         } catch (LoginException ex) {
@@ -97,12 +87,12 @@ public class AuthController {
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
+
         if (result.hasErrors()) {
             model.addAttribute("userDto", userDto);
             return "register";
         }
-        User user = convertToEntity(userDto);
-        authService.register(user);
+        authService.register(userDto);
         redirectAttributes.addFlashAttribute("success", "Uspešno ste se registrovali, prijavite se kako bi nastavili dalje.");
         return "redirect:/login";
     }
@@ -113,19 +103,14 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    @ModelAttribute(name = "userDto")
-    private RegisterUserDto getUserDto() {
+    @ModelAttribute(name = "registerUserDto")
+    private RegisterUserDto getRegisterUserDto() {
         return new RegisterUserDto();
     }
 
-    private UserDto convertToDto(User user) {
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        return userDto;
-    }
-
-    private User convertToEntity(RegisterUserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        return user;
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(userValidator);
     }
 
 }

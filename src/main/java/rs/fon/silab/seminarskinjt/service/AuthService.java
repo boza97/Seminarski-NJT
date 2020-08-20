@@ -5,7 +5,8 @@
  */
 package rs.fon.silab.seminarskinjt.service;
 
-import rs.fon.silab.seminarskinjt.entity.User;
+import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
+import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 
 /**
@@ -13,7 +14,7 @@ import rs.fon.silab.seminarskinjt.exception.LoginException;
  * @author Bozidar
  */
 public interface AuthService {
-    void register(User user);
-    User findByEmail(String email);
-    User login(String email, String password) throws LoginException;
+    void register(RegisterUserDto user);
+    UserDto findByEmail(String email);
+    UserDto login(String email, String password) throws LoginException;
 }

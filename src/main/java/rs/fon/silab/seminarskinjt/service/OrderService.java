@@ -6,13 +6,13 @@
 package rs.fon.silab.seminarskinjt.service;
 
 import java.util.List;
-import rs.fon.silab.seminarskinjt.entity.Order;
+import rs.fon.silab.seminarskinjt.dto.OrderDto;
 
 /**
  *
  * @author Bozidar
  */
 public interface OrderService {
-    void save(Order order);
-    List<Order> getAll();
+    void save(OrderDto orderDto);
+    List<OrderDto> getAll();
 }
