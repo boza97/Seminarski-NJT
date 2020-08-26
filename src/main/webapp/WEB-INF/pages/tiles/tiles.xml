@@ -97,5 +97,20 @@
                        value="/WEB-INF/pages/orders/checkout.jsp">
         </put-attribute>
     </definition>
+    
+    <!--ADMIN-->
+    <definition name="admin/orders" extends="base-definition">
+        <put-attribute name="title" value="Orders"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/admin/orders/index.jsp">
+        </put-attribute>
+    </definition>
+    
+    <definition name="admin/orders/view" extends="base-definition">
+        <put-attribute name="title" value="Details"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/admin/orders/view.jsp">
+        </put-attribute>
+    </definition>
   
 </tiles-definitions>

@@ -5,6 +5,9 @@
  */
 package rs.fon.silab.seminarskinjt.dto;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -15,8 +18,8 @@ public class ProductDto {
 
     private Long id;
     private String name;
-    private double price;
-    private String details;
+    private BigDecimal price;
+    private Map<String, LocalizedProductDto> localizations = new HashMap<>();
     private CategoryDto category;
     private String image;
     private int featured;
@@ -25,11 +28,9 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(Long id, String name, double price, String details, CategoryDto category, String image, int featured, int quantity) {
-        this.id = id;
+    public ProductDto(String name, BigDecimal price, CategoryDto category, String image, int featured, int quantity) {
         this.name = name;
         this.price = price;
-        this.details = details;
         this.category = category;
         this.image = image;
         this.featured = featured;
@@ -52,20 +53,20 @@ public class ProductDto {
         this.name = name;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public String getDetails() {
-        return details;
+    public Map<String, LocalizedProductDto> getLocalizations() {
+        return localizations;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setLocalizations(Map<String, LocalizedProductDto> localizations) {
+        this.localizations = localizations;
     }
 
     public CategoryDto getCategory() {

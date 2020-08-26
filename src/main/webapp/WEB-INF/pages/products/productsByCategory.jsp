@@ -24,7 +24,7 @@
                             <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="RSD "/></span>
                     </p>
                     <a href="${root}/products/${product.id}/view" class="btn btn-primary">
-                        <spring:message code="button.product.details" text="default"/>
+                        <spring:message code="button.details" text="default"/>
                     </a>
                     <button class="btn btn-warning mx-3" onclick="addToCart(${product.id})">
                         <spring:message code="button.cart.add" text="default"/>

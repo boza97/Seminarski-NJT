@@ -5,6 +5,7 @@
  */
 package rs.fon.silab.seminarskinjt.dto;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -13,37 +14,26 @@ import java.util.Objects;
  */
 public class OrderItemDto {
 
-    private Long serialNumber;
-    private Long orderId;
+    private OrderItemIdDto orderItemId;
     private ProductDto product;
     private int quantity;
-    private double amount;
+    private BigDecimal amount;
 
     public OrderItemDto() {
     }
 
-    public OrderItemDto(Long serialNumber, Long orderId, ProductDto product, int quantity, double amount) {
-        this.serialNumber = serialNumber;
-        this.orderId = orderId;
+    public OrderItemDto(ProductDto product, int quantity, BigDecimal amount) {
         this.product = product;
         this.quantity = quantity;
         this.amount = amount;
     }
 
-    public Long getSerialNumber() {
-        return serialNumber;
+    public OrderItemIdDto getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setSerialNumber(Long serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderItemId(OrderItemIdDto orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public ProductDto getProduct() {
@@ -62,18 +52,12 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
     }
 
     @Override
@@ -88,10 +72,10 @@ public class OrderItemDto {
             return false;
         }
         final OrderItemDto other = (OrderItemDto) obj;
-        if (!Objects.equals(this.serialNumber, other.serialNumber)) {
+        if (!Objects.equals(this.orderItemId, other.orderItemId)) {
             return false;
         }
-        if (!Objects.equals(this.orderId, other.orderId)) {
+        if (!Objects.equals(this.product, other.product)) {
             return false;
         }
         return true;

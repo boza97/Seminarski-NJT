@@ -6,9 +6,11 @@
 package rs.fon.silab.seminarskinjt.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -33,13 +37,14 @@ public class Product implements Serializable {
             pkColumnName = "PK_GEN", valueColumnName = "VALUE_GEN",
             pkColumnValue = "TABLE_PRODUCT", initialValue = 0, allocationSize = 1)
     private Long id;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @MapKey(name = "localizedId.locale")
+    private Map<String, LocalizedProduct> localizations = new HashMap<>();
+
     private String name;
 
-    @Column(columnDefinition = "DECIMAL", precision = 10, scale = 2)
-    private double price;
-
-    @Column(columnDefinition = "TEXT")
-    private String details;
+    private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "CATEGORY_ID")
@@ -51,11 +56,9 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, double price, String details, Category category, String image, int featured, int quantity) {
-        this.id = id;
+    public Product(String name, BigDecimal price, Category category, String image, int featured, int quantity) {
         this.name = name;
         this.price = price;
-        this.details = details;
         this.category = category;
         this.image = image;
         this.featured = featured;
@@ -78,24 +81,24 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
     }
 
     public Category getCategory() {
         return category;
+    }
+
+    public Map<String, LocalizedProduct> getLocalizations() {
+        return localizations;
+    }
+
+    public void setLocalizations(Map<String, LocalizedProduct> localizations) {
+        this.localizations = localizations;
     }
 
     public void setCategory(Category category) {
@@ -128,15 +131,13 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.id);
-        hash = 37 * hash + Objects.hashCode(this.name);
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
-        hash = 37 * hash + Objects.hashCode(this.details);
-        hash = 37 * hash + Objects.hashCode(this.category);
-        hash = 37 * hash + Objects.hashCode(this.image);
-        hash = 37 * hash + this.featured;
-        hash = 37 * hash + this.quantity;
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.name);
+        hash = 23 * hash + Objects.hashCode(this.price);
+        hash = 23 * hash + Objects.hashCode(this.image);
+        hash = 23 * hash + this.featured;
+        hash = 23 * hash + this.quantity;
         return hash;
     }
 
@@ -157,5 +158,5 @@ public class Product implements Serializable {
         }
         return true;
     }
-    
+
 }

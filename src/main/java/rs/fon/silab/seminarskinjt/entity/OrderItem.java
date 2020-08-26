@@ -8,15 +8,13 @@ package rs.fon.silab.seminarskinjt.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 /**
  *
@@ -26,15 +24,11 @@ import javax.persistence.TableGenerator;
 @Table(name = "ORDER_ITEM")
 public class OrderItem implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "GEN_ORDER_ITEM")
-    @TableGenerator(name = "GEN_ORDER_ITEM", table = "GEN_ID",
-            pkColumnName = "PK_GEN", valueColumnName = "VALUE_GEN",
-            pkColumnValue = "TABLE_ORDER_ITEM", initialValue = 0, allocationSize = 1)
-    private Long id;
+    @EmbeddedId
+    private OrderItemId orderItemId;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @MapsId("orderId")
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 
@@ -48,20 +42,20 @@ public class OrderItem implements Serializable {
     public OrderItem() {
     }
 
-    public OrderItem(Long id, Order order, Product product, int quantity, BigDecimal amount) {
-        this.id = id;
+    public OrderItem(OrderItemId orderItemId, Order order, Product product, int quantity, BigDecimal amount) {
+        this.orderItemId = orderItemId;
         this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.amount = amount;
     }
 
-    public Long getId() {
-        return id;
+    public OrderItemId getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setOrderItemId(OrderItemId orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public Order getOrder() {
@@ -98,10 +92,11 @@ public class OrderItem implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.id);
-        hash = 79 * hash + this.quantity;
-        hash = 79 * hash + Objects.hashCode(this.amount);
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.orderItemId);
+        hash = 41 * hash + Objects.hashCode(this.order);
+        hash = 41 * hash + this.quantity;
+        hash = 41 * hash + Objects.hashCode(this.amount);
         return hash;
     }
 
@@ -117,10 +112,7 @@ public class OrderItem implements Serializable {
             return false;
         }
         final OrderItem other = (OrderItem) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.order, other.order)) {
+        if (!Objects.equals(this.orderItemId, other.orderItemId)) {
             return false;
         }
         return true;

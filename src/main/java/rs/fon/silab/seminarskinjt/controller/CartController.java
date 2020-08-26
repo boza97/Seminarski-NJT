@@ -5,6 +5,7 @@
  */
 package rs.fon.silab.seminarskinjt.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,20 +38,20 @@ import rs.fon.silab.seminarskinjt.service.ProductService;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-
+    
     private final ProductService productService;
-
+    
     @Autowired
     public CartController(
             ProductService productService) {
         this.productService = productService;
     }
-
+    
     @GetMapping
     public String index() {
         return "cart";
     }
-
+    
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +59,7 @@ public class CartController {
     public ResponseEntity<ResponseDataDto> add(
             @RequestBody CartRequestDataDto requestData,
             HttpServletRequest request) {
-
+        
         ResponseDataDto responseData = new ResponseDataDto();
         ProductDto productDto = productService.findById(requestData.getProductId());
         if (productDto != null) {
@@ -75,7 +76,7 @@ public class CartController {
         }
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-
+    
     @DeleteMapping(
             value = "{productId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,11 +84,11 @@ public class CartController {
     public ResponseEntity<ResponseDataDto> remove(
             @PathVariable("productId") Long productId,
             HttpSession session) {
-
+        
         System.out.println(productId);
         ResponseDataDto responseData = new ResponseDataDto("Proizvod je obrisan iz korpe", null);
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-
+        
         if (cart == null || cart.isEmpty()) {
             responseData.setCode("EMPTY_CART");
             responseData.setMessage("Vaša korpa je već prazna.");
@@ -96,42 +97,42 @@ public class CartController {
                     .filter(oi -> !Objects.equals(oi.getProduct().getId(), productId))
                     .collect(Collectors.toList());
             session.setAttribute("cart", cart);
-
+            
             if (cart.isEmpty()) {
                 responseData.setCode("EMPTY_CART");
                 responseData.setMessage("Vaša korpa je prazna.");
             }
         }
-
+        
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-
+    
     @PostMapping("add-quantities")
     public String addQuantities(
             @RequestParam(value = "productid[]") Long[] ids,
             @RequestParam(value = "quantity[]") int[] quantities,
             HttpSession session) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-
+        
         if (cart == null || cart.isEmpty()) {
             return "cart";
         }
-
+        
         addQuantities(cart, ids, quantities);
-
+        
         return "redirect:/orders/checkout";
     }
-
+    
     private void addQuantities(List<OrderItemDto> cart, Long[] ids, int[] quantities) {
         for (int i = 0; i < cart.size(); i++) {
             OrderItemDto orderItem = cart.get(i);
             if (Objects.equals(orderItem.getProduct().getId(), ids[i])) {
                 orderItem.setQuantity(quantities[i]);
-                orderItem.setAmount(orderItem.getProduct().getPrice() * quantities[i]);
+                orderItem.setAmount(orderItem.getProduct().getPrice().multiply(new BigDecimal(quantities[i])));
             }
         }
     }
-
+    
     private boolean exists(HttpSession session, ProductDto product) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
         if (cart != null) {
@@ -143,13 +144,13 @@ public class CartController {
         }
         return false;
     }
-
+    
     private void addToCart(HttpSession session, ProductDto productDto) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
         }
-
+        
         OrderItemDto newOrderItem = new OrderItemDto();
         newOrderItem.setAmount(productDto.getPrice());
         newOrderItem.setProduct(productDto);
@@ -157,5 +158,5 @@ public class CartController {
         cart.add(newOrderItem);
         session.setAttribute("cart", cart);
     }
-
+    
 }

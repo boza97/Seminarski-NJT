@@ -40,7 +40,7 @@
                                 <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="RSD " /></span>
                         </p>
                         <a href="${root}/products/${product.id}/view" class="btn btn-primary">
-                            <spring:message code="button.product.details" text="default"/>
+                            <spring:message code="button.details" text="default"/>
                         </a>
                     </div>
                 </div>  
