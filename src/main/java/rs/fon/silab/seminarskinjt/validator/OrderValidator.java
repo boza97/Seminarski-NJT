@@ -26,10 +26,10 @@ public class OrderValidator implements Validator{
     @Override
     public void validate(Object o, Errors errors) {
         
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contactName", null, "Ime i prezime su obavezni.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", null, "Grad je obavezan.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", null, "Adresa je obavezna.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", null, "Telefon je obavezan.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "contactName", "orderDto.contactName", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "orderDto.city", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "orderDto.address", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "orderDto.phone", "default");
     }
     
 }

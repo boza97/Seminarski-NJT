@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.fon.silab.seminarskinjt.dto.OrderDto;
+import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.entity.Order;
 import rs.fon.silab.seminarskinjt.entity.OrderItem;
 import rs.fon.silab.seminarskinjt.entity.OrderItemId;
@@ -29,12 +30,12 @@ import rs.fon.silab.seminarskinjt.service.OrderService;
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
-    
+
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
-    
+
     @Autowired
     public OrderServiceImpl(
             OrderRepository orderRepository,
@@ -46,30 +47,30 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
     }
-    
+
     @Override
     public void save(OrderDto orderDto) {
-        
+
         Order order = modelMapper.map(orderDto, Order.class);
         long id = 0;
-        
+
         for (OrderItem item : order.getItems()) {
             Product product = productRepository.findById(item.getProduct().getId()).get();
             int newUnitsInStock = product.getQuantity() - item.getQuantity();
             product.setQuantity(newUnitsInStock);
-            
+
             item.setOrderItemId(new OrderItemId(++id));
             item.setProduct(product);
             item.setOrder(order);
         }
-        
+
         User user = userRepository.findById(order.getUser().getId()).get();
         order.setUser(user);
         order.caluclateTotal();
-        
+
         orderRepository.save(order);
     }
-    
+
     @Override
     public List<OrderDto> getAll() {
         List<Order> orders = orderRepository.findAll();
@@ -77,5 +78,13 @@ public class OrderServiceImpl implements OrderService {
                 .map(o -> modelMapper.map(o, OrderDto.class))
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public List<OrderDto> getAllByUser(UserDto userDto) {
+        List<Order> orders = orderRepository.findAllByUser(userDto.getId());
+        return orders.stream()
+                .map(o -> modelMapper.map(o, OrderDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

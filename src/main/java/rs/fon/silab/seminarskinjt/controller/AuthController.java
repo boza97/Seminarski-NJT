@@ -5,10 +5,11 @@
  */
 package rs.fon.silab.seminarskinjt.controller;
 
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -33,13 +34,16 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserValidator userValidator;
+    private final MessageSource messageSource;
 
     @Autowired
     public AuthController(
             AuthService authService,
-            UserValidator userValidator) {
+            UserValidator userValidator,
+            MessageSource messageSource) {
         this.authService = authService;
         this.userValidator = userValidator;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("login")
@@ -56,10 +60,12 @@ public class AuthController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
             HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Locale locale) {
 
         if (email.isEmpty() || password.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Morate popuniti sva polja");
+            String message = messageSource.getMessage("userDto.login.fields.empty", null, locale);
+            redirectAttributes.addFlashAttribute("error", message);
             return "redirect:/login";
         }
         try {
@@ -67,7 +73,8 @@ public class AuthController {
             request.getSession(true).setAttribute("user", userDto);
             return "redirect:/home";
         } catch (LoginException ex) {
-            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            String message = messageSource.getMessage("userDto.login.failed", null, locale);
+            redirectAttributes.addFlashAttribute("error", message);
             return "redirect:/login";
         }
     }
@@ -83,17 +90,18 @@ public class AuthController {
 
     @PostMapping("register")
     public String register(
-            @ModelAttribute(name = "userDto") @Validated RegisterUserDto userDto,
+            @ModelAttribute(name = "registerUserDto") @Validated RegisterUserDto userDto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
-            Model model) {
+            Locale locale) {
 
         if (result.hasErrors()) {
-            model.addAttribute("userDto", userDto);
             return "register";
         }
         authService.register(userDto);
-        redirectAttributes.addFlashAttribute("success", "Uspešno ste se registrovali, prijavite se kako bi nastavili dalje.");
+        String message = messageSource.getMessage("registerUserDto.register.success", null, locale);
+        redirectAttributes.addFlashAttribute("success", message);
+
         return "redirect:/login";
     }
 

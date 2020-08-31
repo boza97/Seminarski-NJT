@@ -6,9 +6,12 @@
 package rs.fon.silab.seminarskinjt.controller;
 
 import java.util.List;
+import java.util.Locale;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -34,17 +37,27 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderValidator orderValidator;
+    private final MessageSource messageSource;
 
     @Autowired
     public OrderController(
             OrderService orderService,
-            OrderValidator orderValidator) {
+            OrderValidator orderValidator,
+            MessageSource messageSource) {
         this.orderService = orderService;
         this.orderValidator = orderValidator;
+        this.messageSource = messageSource;
     }
 
     @GetMapping
-    private String showOrders() {
+    private String showOrders(
+            HttpSession session,
+            Model model) {
+
+        UserDto userDto = (UserDto) session.getAttribute("user");
+        List<OrderDto> orders = orderService.getAllByUser(userDto);
+        model.addAttribute("orders", orders);
+
         return "orders";
     }
 
@@ -64,7 +77,8 @@ public class OrderController {
             @ModelAttribute("orderDto") @Validated OrderDto orderDto,
             BindingResult result,
             HttpSession session,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Locale locale) {
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("orderDto", orderDto);
@@ -80,10 +94,10 @@ public class OrderController {
         UserDto userDto = (UserDto) session.getAttribute("user");
         orderDto.setItems(cart);
         orderDto.setUser(userDto);
-
         orderService.save(orderDto);
 
-        redirectAttributes.addFlashAttribute("success", "Uspešno ste izvšili narudžbinu.");
+        String message = messageSource.getMessage("label.order.success", null, locale);
+        redirectAttributes.addFlashAttribute("success", message);
         return "redirect:/orders";
     }
 
@@ -95,11 +109,6 @@ public class OrderController {
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(orderValidator);
-    }
-
-    @ModelAttribute("orders")
-    private List<OrderDto> getOrders() {
-        return orderService.getAll();
     }
 
 }

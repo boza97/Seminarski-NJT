@@ -12,14 +12,15 @@ package rs.fon.silab.seminarskinjt.dto;
 public class CategoryDto {
 
     private Long id;
-    private String name;
+    private String nameSr;
+    private String nameEn;
 
     public CategoryDto() {
     }
 
-    public CategoryDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public CategoryDto(String nameSr, String nameEn) {
+        this.nameSr = nameSr;
+        this.nameEn = nameEn;
     }
 
     public Long getId() {
@@ -30,12 +31,20 @@ public class CategoryDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNameSr() {
+        return nameSr;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameSr(String nameSr) {
+        this.nameSr = nameSr;
+    }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
     }
 
 }

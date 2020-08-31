@@ -60,8 +60,8 @@
                 </c:otherwise>                    
             </c:choose>
             <li class="nav-item">
-                <a class="nav-link" href="?lang=${ locale == 'sr' ? 'en_GB' : 'sr'}">
-                    <img src="${root}/resources/img/languages/${locale == 'sr' ? 'en_GB' : 'sr'}-flag.png" title="<spring:message code="title.lang.image" text="default"/>"/>
+                <a class="nav-link" href="?lang=${ locale == 'sr_RS' ? 'en_GB' : 'sr_RS'}">
+                    <img src="${root}/resources/img/languages/${locale == 'sr_RS' ? 'en_GB' : 'sr_RS'}-flag.png" title="<spring:message code="title.lang.image" text="default"/>"/>
                 </a>
             </li>
         </ul>

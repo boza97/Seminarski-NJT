@@ -58,13 +58,11 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public UserDto login(String email, String password) throws LoginException {
         User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new LoginException("Podaci koje ste uneli se ne poklapaju.");
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+
+            throw new LoginException();
         }
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new LoginException("Podaci koje ste uneli se ne poklapaju.");
-        }
         return modelMapper.map(user, UserDto.class);
     }
 

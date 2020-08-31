@@ -11,7 +11,7 @@ function removeFromCart(pid) {
         success: function (data) {
             $('#prod' + pid).remove();
             if (data.code === "EMPTY_CART") {
-                $('#tableBody').html('<tr><td class="text-center" colspan="5">Vaša korpa je prazna.</td></tr>');
+                $('#tableBody').html(`<tr><td class="text-center" colspan="5">${data.message}</td></tr>`);
                 $('#btn-checkout').hide();
             }
         }

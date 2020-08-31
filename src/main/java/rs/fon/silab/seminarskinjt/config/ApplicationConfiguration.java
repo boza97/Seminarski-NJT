@@ -77,7 +77,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("languages/messages");
+        messageSource.setBasenames("languages/messages", "languages/validation");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
@@ -92,7 +92,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-        Locale locale = new Locale.Builder().setLanguage("sr").build();
+        Locale locale = new Locale.Builder().setLanguage("sr").setRegion("RS").build();
 
         localeResolver.setDefaultLocale(locale);
         localeResolver.setCookieName("lang");
@@ -118,7 +118,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
     @Bean
     public UserInterceptor userInterceptor() {
-        return new UserInterceptor(gson());
+        return new UserInterceptor();
     }
 
     @Override

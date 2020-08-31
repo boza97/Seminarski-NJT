@@ -19,7 +19,7 @@ function addToCart(id)
             if (data.message) {
                 $('#modalMsg').html(data.message);
             } else {
-                $('#modalMsg').html('Došlo je do greške');
+                $('#modalMsg').html('Error');
             }
             $('#messageModal').modal();
         }

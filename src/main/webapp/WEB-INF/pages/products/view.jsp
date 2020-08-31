@@ -27,7 +27,7 @@
                 <span class="font-weight-bold">
                     <spring:message code="label.category" text="default"/>: 
                 </span>
-                ${productDto.category.name}
+                ${locale == 'sr' ? productDto.category.nameSr : productDto.category.nameEn}
             </h5>
 
             <h5 >

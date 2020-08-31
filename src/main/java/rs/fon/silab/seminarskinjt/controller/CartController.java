@@ -8,11 +8,13 @@ package rs.fon.silab.seminarskinjt.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,91 +40,107 @@ import rs.fon.silab.seminarskinjt.service.ProductService;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-    
+
     private final ProductService productService;
-    
+    private final MessageSource messageSource;
+
     @Autowired
     public CartController(
-            ProductService productService) {
+            ProductService productService,
+            MessageSource messageSource) {
         this.productService = productService;
+        this.messageSource = messageSource;
     }
-    
+
     @GetMapping
     public String index() {
         return "cart";
     }
-    
+
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ResponseDataDto> add(
             @RequestBody CartRequestDataDto requestData,
-            HttpServletRequest request) {
-        
+            HttpServletRequest request,
+            Locale locale) {
+
         ResponseDataDto responseData = new ResponseDataDto();
         ProductDto productDto = productService.findById(requestData.getProductId());
+        String message = "";
+
         if (productDto != null) {
             if (!exists(request.getSession(), productDto)) {
+
                 addToCart(request.getSession(), productDto);
-                responseData.setMessage("Uspešno ste dodali proizvod u korpu.");
+                message = messageSource.getMessage("label.cart.add.success", null, locale);
+                responseData.setMessage(message);
             } else {
-                responseData.setMessage("Proizvod je već dodat u korpu.");
+                message = messageSource.getMessage("label.cart.product.exists", null, locale);
+                responseData.setMessage(message);
             }
         } else {
-            responseData.setMessage("Proizvod ne postoji sa zadatim id-em.");
+
+            message = messageSource.getMessage("label.product.not.exist", null, locale);
+            responseData.setMessage(message);
             responseData.setCode("ERROR");
             return new ResponseEntity<>(responseData, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
+
     @DeleteMapping(
             value = "{productId}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ResponseDataDto> remove(
             @PathVariable("productId") Long productId,
-            HttpSession session) {
+            HttpSession session,
+            Locale locale) {
         
-        System.out.println(productId);
-        ResponseDataDto responseData = new ResponseDataDto("Proizvod je obrisan iz korpe", null);
+        String message = messageSource.getMessage("label.cart.remove.success", null, locale);
+        ResponseDataDto responseData = new ResponseDataDto(message, null);
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-        
+
         if (cart == null || cart.isEmpty()) {
+
+            message = messageSource.getMessage("label.cart.empty", null, locale);
             responseData.setCode("EMPTY_CART");
-            responseData.setMessage("Vaša korpa je već prazna.");
+            responseData.setMessage(message);
+            
         } else {
             cart = cart.stream()
                     .filter(oi -> !Objects.equals(oi.getProduct().getId(), productId))
                     .collect(Collectors.toList());
             session.setAttribute("cart", cart);
-            
+
             if (cart.isEmpty()) {
+                message = messageSource.getMessage("label.cart.empty", null, locale);
                 responseData.setCode("EMPTY_CART");
-                responseData.setMessage("Vaša korpa je prazna.");
+                responseData.setMessage(message);
             }
         }
-        
+
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
+
     @PostMapping("add-quantities")
     public String addQuantities(
             @RequestParam(value = "productid[]") Long[] ids,
             @RequestParam(value = "quantity[]") int[] quantities,
             HttpSession session) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-        
+
         if (cart == null || cart.isEmpty()) {
             return "cart";
         }
-        
+
         addQuantities(cart, ids, quantities);
-        
+
         return "redirect:/orders/checkout";
     }
-    
+
     private void addQuantities(List<OrderItemDto> cart, Long[] ids, int[] quantities) {
         for (int i = 0; i < cart.size(); i++) {
             OrderItemDto orderItem = cart.get(i);
@@ -132,7 +150,7 @@ public class CartController {
             }
         }
     }
-    
+
     private boolean exists(HttpSession session, ProductDto product) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
         if (cart != null) {
@@ -144,19 +162,20 @@ public class CartController {
         }
         return false;
     }
-    
+
     private void addToCart(HttpSession session, ProductDto productDto) {
         List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
         }
-        
+
         OrderItemDto newOrderItem = new OrderItemDto();
         newOrderItem.setAmount(productDto.getPrice());
         newOrderItem.setProduct(productDto);
         newOrderItem.setQuantity(1);
+
         cart.add(newOrderItem);
         session.setAttribute("cart", cart);
     }
-    
+
 }

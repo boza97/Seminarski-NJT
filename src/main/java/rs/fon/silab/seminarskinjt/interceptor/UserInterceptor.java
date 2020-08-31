@@ -7,10 +7,13 @@ package rs.fon.silab.seminarskinjt.interceptor;
 
 import com.google.gson.Gson;
 import java.io.PrintWriter;
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.util.WebUtils;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.dto.response.ResponseDataDto;
 
@@ -20,12 +23,10 @@ import rs.fon.silab.seminarskinjt.dto.response.ResponseDataDto;
  */
 public class UserInterceptor extends HandlerInterceptorAdapter {
 
-    private final Gson gson;
-
     @Autowired
-    public UserInterceptor(Gson gson) {
-        this.gson = gson;
-    }
+    private Gson gson;
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,7 +37,10 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
                 String root = request.getContextPath();
                 response.sendRedirect(root + "/login");
             } else {
-                ResponseDataDto responseData = new ResponseDataDto("Morate se prijaviti na sistem.", null);
+                Locale locale = getLocale(request);
+
+                String meessage = messageSource.getMessage("userDto.not.loged", null, locale);
+                ResponseDataDto responseData = new ResponseDataDto(meessage, null);
                 String responseDataJSON = gson.toJson(responseData);
 
                 PrintWriter out = response.getWriter();
@@ -50,6 +54,23 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         return true;
+    }
+
+    private Locale getLocale(HttpServletRequest request) {
+        String language = "sr";
+        String region = "RS";
+
+        if (WebUtils.getCookie(request, "lang") != null) {
+            String cookieValue = WebUtils.getCookie(request, "lang").getValue();
+            String[] locale = cookieValue.split("-");
+
+            language = locale[0];
+            region = locale[1];
+
+            return new Locale.Builder().setLanguage(language).setRegion(region).build();
+        }
+
+        return new Locale.Builder().setLanguage(language).setRegion(region).build();
     }
 
 }

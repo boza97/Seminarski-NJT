@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="root" value="${pageContext.request.contextPath}" />
+<c:set var="locale" value="${pageContext.response.locale}" />
 
 <div class="containter my-4">
     <div class="form-group row">
@@ -15,7 +16,7 @@
                 <spring:message code="label.products.category.default" text="default"/>
             </option>
             <c:forEach items="${categories}" var="category">
-                <option value="${category.id}">${category.name}</option>
+                <option value="${category.id}">${locale == 'sr_RS' ? category.nameSr : category.nameEn}</option>
             </c:forEach>
         </select>
     </div>

@@ -13,8 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
-import rs.fon.silab.seminarskinjt.entity.User;
-import rs.fon.silab.seminarskinjt.repository.UserRepository;
+import rs.fon.silab.seminarskinjt.dto.UserDto;
+import rs.fon.silab.seminarskinjt.service.AuthService;
 
 /**
  *
@@ -23,12 +23,12 @@ import rs.fon.silab.seminarskinjt.repository.UserRepository;
 @Component
 public class UserValidator implements Validator {
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Autowired
-    public UserValidator(UserRepository userRepository) {
+    public UserValidator(AuthService authService) {
         super();
-        this.userRepository = userRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -40,18 +40,18 @@ public class UserValidator implements Validator {
     public void validate(Object o, Errors errors) {
         RegisterUserDto user = (RegisterUserDto) o;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", null, "Ime ne sme biti prazno.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", null, "Prezime ne sme biti prazno.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", null, "E-mail adresa ne sme biti prazna.");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", null, "Lozinka ne sme biti prazna.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "registerUserDto.firstname", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "registerUserDto.lastname", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "registerUserDto.email.empty", "default");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "registerUserDto.password.empty", "default");
 
         if (errors.hasErrors()) {
             return;
         }
 
-        User entity = userRepository.findByEmail(user.getEmail());
-        if (entity != null) {
-            errors.rejectValue("email", null, "Korisnik već postoji sa zadatom email adresom.");
+        UserDto dbUser = authService.findByEmail(user.getEmail());
+        if (dbUser != null) {
+            errors.rejectValue("email", "registerUserDto.exists", "default");
             return;
         }
 
@@ -59,7 +59,7 @@ public class UserValidator implements Validator {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(user.getEmail());
         if (!matcher.matches()) {
-            errors.rejectValue("email", null, "E-mail adresa nije validna.");
+            errors.rejectValue("email", "registerUserDto.email", "default");
             return;
         }
 
@@ -67,13 +67,12 @@ public class UserValidator implements Validator {
         pattern = Pattern.compile(regex);
         matcher = pattern.matcher(user.getPassword());
         if (!matcher.matches()) {
-            errors.rejectValue("password", null, "Lozinka mora imati minimum 6 karaktera, sadržati barem jedno veliko slovo,"
-                    + "broj i specijalni karakter.");
+            errors.rejectValue("password", "registerUserDto.password", "default");
             return;
         }
 
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            errors.rejectValue("confirmPassword", null, "Lozinke se ne poklapaju.");
+            errors.rejectValue("confirmPassword", "registerUserDto.confirmPassword", "default");
         }
     }
 

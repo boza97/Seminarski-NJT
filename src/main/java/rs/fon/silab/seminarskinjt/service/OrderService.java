@@ -7,6 +7,7 @@ package rs.fon.silab.seminarskinjt.service;
 
 import java.util.List;
 import rs.fon.silab.seminarskinjt.dto.OrderDto;
+import rs.fon.silab.seminarskinjt.dto.UserDto;
 
 /**
  *
@@ -15,4 +16,5 @@ import rs.fon.silab.seminarskinjt.dto.OrderDto;
 public interface OrderService {
     void save(OrderDto orderDto);
     List<OrderDto> getAll();
+    List<OrderDto> getAllByUser(UserDto userDto);
 }
