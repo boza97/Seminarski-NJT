@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
@@ -51,11 +50,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDto findByEmail(String email) {
         User user = this.userRepository.findByEmail(email);
-        return modelMapper.map(user, UserDto.class);
+        return user != null ? modelMapper.map(user, UserDto.class) : null;
     }
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public UserDto login(String email, String password) throws LoginException {
         User user = userRepository.findByEmail(email);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {

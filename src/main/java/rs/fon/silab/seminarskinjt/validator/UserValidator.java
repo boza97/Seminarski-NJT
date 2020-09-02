@@ -49,17 +49,17 @@ public class UserValidator implements Validator {
             return;
         }
 
-        UserDto dbUser = authService.findByEmail(user.getEmail());
-        if (dbUser != null) {
-            errors.rejectValue("email", "registerUserDto.exists", "default");
-            return;
-        }
-
         String regex = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(user.getEmail());
         if (!matcher.matches()) {
             errors.rejectValue("email", "registerUserDto.email", "default");
+            return;
+        }
+
+        UserDto dbUser = authService.findByEmail(user.getEmail());
+        if (dbUser != null) {
+            errors.rejectValue("email", "registerUserDto.exists", "default");
             return;
         }
 

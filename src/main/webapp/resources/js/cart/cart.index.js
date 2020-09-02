@@ -21,10 +21,7 @@ function removeFromCart(pid) {
 function calculateTotal(el, pid) {
     let quantitiy = el.value;
     let price = $('#price' + pid).text().trim().split(" ")[1];
-    console.log(price);
-    price = parseFloat(price.replace(",", ""));
-    console.log('PRICE');
-    console.log(price);
+    price = parseFloat(price);
 
     let total = quantitiy * price;
     total = 'RSD ' + total.toFixed(2);

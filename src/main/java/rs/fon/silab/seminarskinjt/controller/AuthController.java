@@ -90,7 +90,7 @@ public class AuthController {
 
     @PostMapping("register")
     public String register(
-            @ModelAttribute(name = "registerUserDto") @Validated RegisterUserDto userDto,
+            @ModelAttribute @Validated RegisterUserDto registerUserDto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Locale locale) {
@@ -98,7 +98,7 @@ public class AuthController {
         if (result.hasErrors()) {
             return "register";
         }
-        authService.register(userDto);
+        authService.register(registerUserDto);
         String message = messageSource.getMessage("registerUserDto.register.success", null, locale);
         redirectAttributes.addFlashAttribute("success", message);
 

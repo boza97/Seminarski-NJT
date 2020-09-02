@@ -66,8 +66,6 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 
             language = locale[0];
             region = locale[1];
-
-            return new Locale.Builder().setLanguage(language).setRegion(region).build();
         }
 
         return new Locale.Builder().setLanguage(language).setRegion(region).build();

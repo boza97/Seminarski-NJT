@@ -30,14 +30,12 @@
                             <c:forEach items="${cart}" var="orderItem">
                                 <tr id="prod${orderItem.product.id}">
                                     <td>${orderItem.product.name}</td>
-                                    <td id="price${orderItem.product.id}">
-                                        <fmt:formatNumber value="${orderItem.product.price}" type="currency" currencySymbol="RSD " /></td>
+                                    <td id="price${orderItem.product.id}">RSD ${orderItem.product.price}</td>
                                     <td>
                                         <input type="hidden" name="productid[]" value="${orderItem.product.id}">
                                         <input class="form-control w-75" id="quantitiy" type="number" name="quantity[]" min='1' max='${orderItem.product.quantity}' value="1" onchange="calculateTotal(this, ${orderItem.product.id});">
                                     </td>
-                                    <td id="total${orderItem.product.id}">
-                                        <fmt:formatNumber value="${orderItem.product.price}" type="currency" currencySymbol="RSD "/></td>          
+                                    <td id="total${orderItem.product.id}">RSD ${orderItem.product.price}</td>          
                                     <td><button type="button" class="btn btn-link p-0 text-danger" onclick="removeFromCart(${orderItem.product.id});">X</button></td>
                                 </tr> 
                             </c:forEach>

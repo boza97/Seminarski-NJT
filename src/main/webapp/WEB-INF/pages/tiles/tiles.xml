@@ -98,18 +98,11 @@
         </put-attribute>
     </definition>
     
-    <!--ADMIN-->
-    <definition name="admin/orders" extends="base-definition">
-        <put-attribute name="title" value="Orders"></put-attribute>
+    <!--EXCEPTION-->
+    <definition name="error" extends="base-definition">
+        <put-attribute name="title" value="Error"></put-attribute>
         <put-attribute name="body"
-                       value="/WEB-INF/pages/admin/orders/index.jsp">
-        </put-attribute>
-    </definition>
-    
-    <definition name="admin/orders/view" extends="base-definition">
-        <put-attribute name="title" value="Details"></put-attribute>
-        <put-attribute name="body"
-                       value="/WEB-INF/pages/admin/orders/view.jsp">
+                       value="/WEB-INF/pages/error/globalException.jsp">
         </put-attribute>
     </definition>
   
