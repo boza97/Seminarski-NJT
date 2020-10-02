@@ -91,6 +91,13 @@
         </put-attribute>
     </definition>
     
+    <definition name="orders/view" extends="base-definition">
+        <put-attribute name="title" value="View"></put-attribute>
+        <put-attribute name="body"
+                       value="/WEB-INF/pages/orders/view.jsp">
+        </put-attribute>
+    </definition>
+
     <definition name="checkout" extends="base-definition">
         <put-attribute name="title" value="Checkout"></put-attribute>
         <put-attribute name="body"

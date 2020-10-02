@@ -39,5 +39,4 @@ public class StripeServiceImpl implements StripeService {
         chargeParams.put("source", chargeRequest.getStripeToken());
         return Charge.create(chargeParams);
     }
-
 }

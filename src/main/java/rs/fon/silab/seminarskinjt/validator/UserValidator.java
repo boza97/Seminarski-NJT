@@ -14,7 +14,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
-import rs.fon.silab.seminarskinjt.service.AuthService;
+import rs.fon.silab.seminarskinjt.service.UserService;
 
 /**
  *
@@ -23,10 +23,10 @@ import rs.fon.silab.seminarskinjt.service.AuthService;
 @Component
 public class UserValidator implements Validator {
 
-    private final AuthService authService;
+    private final UserService authService;
 
     @Autowired
-    public UserValidator(AuthService authService) {
+    public UserValidator(UserService authService) {
         super();
         this.authService = authService;
     }

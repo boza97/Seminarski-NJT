@@ -13,7 +13,7 @@ import rs.fon.silab.seminarskinjt.exception.LoginException;
  *
  * @author Bozidar
  */
-public interface AuthService {
+public interface UserService {
     void register(RegisterUserDto user);
     UserDto findByEmail(String email);
     UserDto login(String email, String password) throws LoginException;

@@ -7,6 +7,7 @@
 <div class="container pt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <%@include file="/WEB-INF/pages/partials/messages.jsp" %>
             <div class="card">
                 <div class="card-header h4 text-center"><spring:message code="label.register" text="default"/></div>
                 <div class="card-body">

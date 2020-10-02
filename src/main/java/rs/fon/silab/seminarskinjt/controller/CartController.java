@@ -6,15 +6,11 @@
 package rs.fon.silab.seminarskinjt.controller;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import rs.fon.silab.seminarskinjt.dto.OrderItemDto;
-import rs.fon.silab.seminarskinjt.dto.ProductDto;
 import rs.fon.silab.seminarskinjt.dto.request.CartRequestDataDto;
 import rs.fon.silab.seminarskinjt.dto.response.ResponseDataDto;
-import rs.fon.silab.seminarskinjt.service.ProductService;
+import rs.fon.silab.seminarskinjt.service.CartService;
 
 /**
  *
@@ -41,15 +36,11 @@ import rs.fon.silab.seminarskinjt.service.ProductService;
 @RequestMapping("/cart")
 public class CartController {
 
-    private final ProductService productService;
-    private final MessageSource messageSource;
+    private final CartService cartService;
 
     @Autowired
-    public CartController(
-            ProductService productService,
-            MessageSource messageSource) {
-        this.productService = productService;
-        this.messageSource = messageSource;
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @GetMapping
@@ -63,30 +54,20 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<ResponseDataDto> add(
             @RequestBody CartRequestDataDto requestData,
-            HttpServletRequest request,
+            HttpSession session,
             Locale locale) {
 
         ResponseDataDto responseData = new ResponseDataDto();
-        ProductDto productDto = productService.findById(requestData.getProductId());
-        String message = "";
+        StringBuilder message = new StringBuilder();
 
-        if (productDto != null) {
-            if (!exists(request.getSession(), productDto)) {
+        boolean flag = cartService.add(requestData.getProductId(), message, session, locale);
+        responseData.setMessage(message.toString());
 
-                addToCart(request.getSession(), productDto);
-                message = messageSource.getMessage("label.cart.add.success", null, locale);
-                responseData.setMessage(message);
-            } else {
-                message = messageSource.getMessage("label.cart.product.exists", null, locale);
-                responseData.setMessage(message);
-            }
-        } else {
-
-            message = messageSource.getMessage("label.product.not.exist", null, locale);
-            responseData.setMessage(message);
+        if (!flag) {
             responseData.setCode("ERROR");
             return new ResponseEntity<>(responseData, HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
@@ -98,28 +79,17 @@ public class CartController {
             @PathVariable("productId") Long productId,
             HttpSession session,
             Locale locale) {
-        
-        String message = messageSource.getMessage("label.cart.remove.success", null, locale);
-        ResponseDataDto responseData = new ResponseDataDto(message, null);
-        List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
 
-        if (cart == null || cart.isEmpty()) {
+        StringBuilder message = new StringBuilder();
+        ResponseDataDto responseData = new ResponseDataDto();
 
-            message = messageSource.getMessage("label.cart.empty", null, locale);
+        boolean flag = cartService.remove(productId, message, session, locale);
+        responseData.setMessage(message.toString());
+
+        if (!flag) {
             responseData.setCode("EMPTY_CART");
-            responseData.setMessage(message);
-            
         } else {
-            cart = cart.stream()
-                    .filter(oi -> !Objects.equals(oi.getProduct().getId(), productId))
-                    .collect(Collectors.toList());
-            session.setAttribute("cart", cart);
-
-            if (cart.isEmpty()) {
-                message = messageSource.getMessage("label.cart.empty", null, locale);
-                responseData.setCode("EMPTY_CART");
-                responseData.setMessage(message);
-            }
+            responseData.setCode("OK");
         }
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
@@ -149,33 +119,6 @@ public class CartController {
                 orderItem.setAmount(orderItem.getProduct().getPrice().multiply(new BigDecimal(quantities[i])));
             }
         }
-    }
-
-    private boolean exists(HttpSession session, ProductDto product) {
-        List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-        if (cart != null) {
-            for (OrderItemDto orderItemDto : cart) {
-                if (orderItemDto.getProduct().equals(product)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void addToCart(HttpSession session, ProductDto productDto) {
-        List<OrderItemDto> cart = (List<OrderItemDto>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
-
-        OrderItemDto newOrderItem = new OrderItemDto();
-        newOrderItem.setAmount(productDto.getPrice());
-        newOrderItem.setProduct(productDto);
-        newOrderItem.setQuantity(1);
-
-        cart.add(newOrderItem);
-        session.setAttribute("cart", cart);
     }
 
 }

@@ -15,6 +15,7 @@ import rs.fon.silab.seminarskinjt.dto.UserDto;
  */
 public interface OrderService {
     void save(OrderDto orderDto);
+    OrderDto findById(Long id);
     List<OrderDto> getAll();
     List<OrderDto> getAllByUser(UserDto userDto);
 }

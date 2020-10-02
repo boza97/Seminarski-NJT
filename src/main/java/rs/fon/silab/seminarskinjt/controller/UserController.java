@@ -7,9 +7,11 @@ package rs.fon.silab.seminarskinjt.controller;
 
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -22,26 +24,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import rs.fon.silab.seminarskinjt.dto.RegisterUserDto;
 import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
-import rs.fon.silab.seminarskinjt.service.AuthService;
 import rs.fon.silab.seminarskinjt.validator.UserValidator;
+import rs.fon.silab.seminarskinjt.service.UserService;
 
 /**
  *
  * @author Bozidar
  */
 @Controller
-public class AuthController {
+public class UserController {
 
-    private final AuthService authService;
+    private final UserService userService;
     private final UserValidator userValidator;
     private final MessageSource messageSource;
 
     @Autowired
-    public AuthController(
-            AuthService authService,
+    public UserController(
+            UserService authService,
             UserValidator userValidator,
             MessageSource messageSource) {
-        this.authService = authService;
+        this.userService = authService;
         this.userValidator = userValidator;
         this.messageSource = messageSource;
     }
@@ -69,7 +71,7 @@ public class AuthController {
             return "redirect:/login";
         }
         try {
-            UserDto userDto = authService.login(email, password);
+            UserDto userDto = userService.login(email, password);
             request.getSession(true).setAttribute("user", userDto);
             return "redirect:/home";
         } catch (LoginException ex) {
@@ -92,13 +94,16 @@ public class AuthController {
     public String register(
             @ModelAttribute @Validated RegisterUserDto registerUserDto,
             BindingResult result,
+            Model model,
             RedirectAttributes redirectAttributes,
             Locale locale) {
 
         if (result.hasErrors()) {
+            String message = messageSource.getMessage("registerUserDto.register.invalid", null, locale);
+            model.addAttribute("error", message);
             return "register";
         }
-        authService.register(registerUserDto);
+        userService.register(registerUserDto);
         String message = messageSource.getMessage("registerUserDto.register.success", null, locale);
         redirectAttributes.addFlashAttribute("success", message);
 
@@ -106,8 +111,14 @@ public class AuthController {
     }
 
     @PostMapping("logout")
-    public String logout(HttpServletRequest request) {
-        request.getSession(true).removeAttribute("user");
+    public String logout(
+            HttpSession session,
+            RedirectAttributes redirectAttributes,
+            Locale locale) {
+        session.removeAttribute("user");
+
+        String message = messageSource.getMessage("label.logout.message", null, locale);
+        redirectAttributes.addFlashAttribute("success", message);
         return "redirect:/login";
     }
 

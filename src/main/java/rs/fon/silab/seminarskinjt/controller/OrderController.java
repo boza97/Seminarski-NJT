@@ -21,6 +21,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +72,16 @@ public class OrderController {
         model.addAttribute("orders", orders);
 
         return "orders";
+    }
+    
+    @GetMapping("{orderId}/view")
+    public String view(
+            @PathVariable("orderId") Long orderId,
+            Model model) {
+        
+        OrderDto orderDto = orderService.findById(orderId);
+        model.addAttribute("order", orderDto);
+        return "orders/view";
     }
 
     @GetMapping("checkout")

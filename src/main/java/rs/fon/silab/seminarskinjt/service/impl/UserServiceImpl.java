@@ -15,7 +15,7 @@ import rs.fon.silab.seminarskinjt.dto.UserDto;
 import rs.fon.silab.seminarskinjt.entity.User;
 import rs.fon.silab.seminarskinjt.exception.LoginException;
 import rs.fon.silab.seminarskinjt.repository.UserRepository;
-import rs.fon.silab.seminarskinjt.service.AuthService;
+import rs.fon.silab.seminarskinjt.service.UserService;
 
 /**
  *
@@ -23,14 +23,14 @@ import rs.fon.silab.seminarskinjt.service.AuthService;
  */
 @Service
 @Transactional
-public class AuthServiceImpl implements AuthService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthServiceImpl(
+    public UserServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             ModelMapper modelMapper) {

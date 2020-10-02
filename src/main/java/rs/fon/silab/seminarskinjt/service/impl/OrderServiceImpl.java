@@ -87,4 +87,15 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public OrderDto findById(Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+
+        if (order != null) {
+            return modelMapper.map(order, OrderDto.class);
+        }
+
+        return null;
+    }
+
 }

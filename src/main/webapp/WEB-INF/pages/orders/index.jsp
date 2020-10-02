@@ -16,11 +16,8 @@
                     <th scope="col">#</th>
                     <th scope="col"><spring:message code="column.datetime" text="default"/></th>
                     <th scope="col"><spring:message code="column.name" text="default"/></th>
-                    <th scope="col"><spring:message code="column.city" text="default"/></th>
-                    <th scope="col"><spring:message code="column.address" text="default"/></th>
-                    <th scope="col"><spring:message code="column.phone" text="default"/></th>
-                    <th scope="col"><spring:message code="column.products" text="default"/></th>
                     <th scope="col"><spring:message code="column.total" text="default"/></th>
+                    <th scope="col"><spring:message code="column.action" text="default"/></th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -31,23 +28,21 @@
                                 <td>${loop.index + 1}</td>
                                 <td>${order.createdAt}</td>
                                 <td>${order.contactName}</td>
-                                <td>${order.city}</td>
-                                <td>${order.address}</td>
-                                <td>${order.phone}</td>
-                                <td>
-                                    <c:forEach items="${order.items}" var="orderItem" varStatus="loop2">
-                                        ${orderItem.product.name} X ${orderItem.quantity} =  ${orderItem.amount}
-                                        <c:if test="${loop2.index < (order.items.size() - 1)}">
-                                            <br>
-                                        </c:if>
-                                    </c:forEach>
-                                </td>
                                 <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="RSD "/></td>
+                                <td>
+                                    <a href="${root}/orders/${order.id}/view" class="btn btn-primary">
+                                        <spring:message code="button.details" text="default"/>
+                                    </a>
+                                </td>
                             </tr>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <tr><td colspan="9" class="text-center"></td></tr>
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                <spring:message code="label.orders.empty" text="default"/>
+                            </td>
+                        </tr>
                     </c:otherwise>
                 </c:choose>
             </tbody>
