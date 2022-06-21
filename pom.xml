@@ -15,7 +15,7 @@
         <jstl.version>1.2</jstl.version>
         <hibernate.version>5.4.19.Final</hibernate.version> 
         <spring.data.version>2.3.0.RELEASE</spring.data.version>
-        <mysql.version>8.0.19</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <spring.version>5.2.6.RELEASE</spring.version>
         <springSecurity.version>5.3.2.RELEASE</springSecurity.version>
         <bootstrap.version>4.4.1</bootstrap.version>
